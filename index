@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a4a3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>hpv-phosangkho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+   Palette: สีเขียวป่าสาธารณสุข + ขาวคลินิก + ส้มแจ้ง
+═══════════════════════════════════════════ */
+:root {
+  --forest:   #0a4a3a;
+  --leaf:     #1a7a5e;
+  --mint:     #2db88a;
+  --pale:     #e8f5f0;
+  --cream:    #f5faf8;
+  --alert:    #e05c2a;
+  --warn:     #f0a500;
+  --info:     #2980b9;
+  --white:    #ffffff;
+  --ink:      #1a2420;
+  --mid:      #4a6960;
+  --ghost:    #9bbfb5;
+  --border:   #c8e0d8;
+  --shadow:   0 2px 12px rgba(10,74,58,.12);
+  --radius:   14px;
+  --radius-sm: 8px;
+  --font:     'Sarabun', sans-serif;
+  --mono:     'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: var(--font);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════ SCREENS */
+.screen { display: none; min-height: 100dvh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ═══════════════════════════ LOGIN */
+#screen-login {
+  background: linear-gradient(160deg, var(--forest) 0%, var(--leaf) 60%, var(--mint) 100%);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.login-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.login-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-logo .icon-wrap {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--forest), var(--mint));
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+.login-logo h1 { font-size: 20px; font-weight: 700; color: var(--forest); }
+.login-logo p  { font-size: 13px; color: var(--mid); margin-top: 2px; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--mid); margin-bottom: 6px; }
+.form-group input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--cream);
+  transition: border-color .2s;
+  outline: none;
+}
+.form-group input:focus { border-color: var(--mint); background: var(--white); }
+
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px;
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none;
+}
+.btn-primary { background: var(--leaf); color: var(--white); }
+.btn-primary:hover { background: var(--forest); }
+.btn-primary:active { transform: scale(.98); }
+.btn-danger  { background: var(--alert); color: var(--white); }
+.btn-ghost   { background: var(--pale); color: var(--forest); }
+.btn-outline { background: transparent; color: var(--leaf); border: 1.5px solid var(--leaf); }
+.btn-sm      { padding: 9px 16px; font-size: 14px; width: auto; border-radius: 8px; }
+.btn-icon    { width: 40px; height: 40px; padding: 0; border-radius: 10px; }
+
+.err-msg { background: #fef0ed; color: var(--alert); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px; display: none; }
+.err-msg.show { display: block; }
+
+/* ═══════════════════════════ TOP BAR */
+.topbar {
+  background: var(--forest);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 58px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.topbar-back {
+  background: none; border: none; color: var(--white);
+  font-size: 22px; cursor: pointer; padding: 4px; line-height: 1;
+}
+.topbar h2 { flex: 1; font-size: 17px; font-weight: 600; }
+.topbar-action { background: none; border: none; color: var(--white); font-size: 20px; cursor: pointer; padding: 4px; }
+.offline-badge {
+  background: var(--warn);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  display: none;
+}
+.offline-badge.show { display: block; }
+
+/* ═══════════════════════════ BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: var(--white);
+  border-top: 1.5px solid var(--border);
+  display: flex;
+  z-index: 100;
+  box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+}
+.nav-item {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  color: var(--ghost);
+  font-size: 11px; font-weight: 500;
+  transition: color .2s;
+  border: none; background: none;
+  font-family: var(--font);
+}
+.nav-item .nav-icon { font-size: 22px; line-height: 1; }
+.nav-item.active { color: var(--leaf); }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+
+/* ═══════════════════════════ MAIN CONTENT */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 80px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ═══════════════════════════ DASHBOARD */
+.greeting { margin-bottom: 20px; }
+.greeting h2 { font-size: 22px; font-weight: 700; color: var(--forest); }
+.greeting p  { font-size: 14px; color: var(--mid); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--mint);
+}
+.stat-card.alert { border-left-color: var(--alert); }
+.stat-card.warn  { border-left-color: var(--warn); }
+.stat-card.info  { border-left-color: var(--info); }
+.stat-num  { font-family: var(--mono); font-size: 28px; font-weight: 500; color: var(--forest); }
+.stat-label{ font-size: 12px; color: var(--mid); margin-top: 2px; }
+
+.section-title {
+  font-size: 16px; font-weight: 700; color: var(--forest);
+  margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.patient-list { display: flex; flex-direction: column; gap: 10px; }
+.patient-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  border: 1.5px solid transparent;
+}
+.patient-card:active { transform: scale(.99); }
+.patient-card.highlight { border-color: var(--alert); }
+
+.avatar {
+  width: 46px; height: 46px;
+  border-radius: 14px;
+  background: var(--pale);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.patient-info { flex: 1; min-width: 0; }
+.patient-name { font-size: 15px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.patient-sub  { font-size: 12px; color: var(--mid); margin-top: 2px; }
+
+.badge {
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-positive { background: #fde8e1; color: var(--alert); }
+.badge-negative { background: #e1f5ec; color: #1a7a4a; }
+.badge-pending  { background: #fef6e4; color: #b07800; }
+.badge-new      { background: var(--pale); color: var(--leaf); }
+
+/* ═══════════════════════════ FAB */
+.fab {
+  position: fixed;
+  bottom: 80px; right: 20px;
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--leaf), var(--mint));
+  color: var(--white);
+  border: none; border-radius: 16px;
+  font-size: 26px; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(26,122,94,.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99;
+  transition: transform .2s, box-shadow .2s;
+}
+.fab:active { transform: scale(.93); box-shadow: 0 3px 10px rgba(26,122,94,.3); }
+
+/* ═══════════════════════════ FORM SCREEN */
+.form-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.form-section-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--forest);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--pale);
+  display: flex; align-items: center; gap: 8px;
+}
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 13px; font-weight: 600; color: var(--mid); margin-bottom: 5px; }
+.form-row label .req { color: var(--alert); }
+.form-row input, .form-row select, .form-row textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 15px;
+  color: var(--ink); background: var(--cream);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+  border-color: var(--mint); background: var(--white);
+}
+.form-row textarea { resize: vertical; min-height: 90px; }
+.form-row select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a6960' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.gps-btn-wrap { display: flex; gap: 8px; }
+.gps-btn-wrap input { flex: 1; font-family: var(--mono); font-size: 13px; }
+.gps-coords { font-family: var(--mono); font-size: 12px; color: var(--mid); margin-top: 4px; }
+.gps-coords.got { color: #1a7a4a; }
+
+/* Photo strip */
+.photo-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.photo-thumb {
+  width: 80px; height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  cursor: pointer;
+}
+.photo-add {
+  width: 80px; height: 80px;
+  border-radius: 10px;
+  border: 2px dashed var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--ghost);
+  cursor: pointer;
+  background: var(--pale);
+  flex-shrink: 0;
+}
+.photo-add:active { background: var(--border); }
+#photo-input { display: none; }
+
+/* Result pills */
+.result-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.result-pill {
+  padding: 9px 18px;
+  border-radius: 20px;
+  font-size: 14px; font-weight: 600;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  color: var(--mid);
+  transition: all .15s;
+  background: var(--cream);
+}
+.result-pill.selected-neg  { background: #e1f5ec; border-color: #1a7a4a; color: #1a7a4a; }
+.result-pill.selected-pos  { background: #fde8e1; border-color: var(--alert); color: var(--alert); }
+.result-pill.selected-pend { background: #fef6e4; border-color: #b07800; color: #b07800; }
+
+/* ═══════════════════════════ PATIENT DETAIL */
+.detail-hero {
+  background: linear-gradient(135deg, var(--forest), var(--leaf));
+  padding: 20px 16px;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.detail-avatar {
+  width: 64px; height: 64px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.detail-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.detail-hero-info h3 { font-size: 20px; font-weight: 700; }
+.detail-hero-info p  { font-size: 13px; opacity: .75; margin-top: 2px; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.info-item { padding: 12px 0; }
+.info-item:not(:last-child) { border-bottom: 1px solid var(--pale); }
+.info-item-label { font-size: 11px; font-weight: 600; color: var(--ghost); text-transform: uppercase; letter-spacing: .04em; }
+.info-item-value { font-size: 14px; color: var(--ink); margin-top: 3px; font-weight: 500; }
+
+.visit-timeline { display: flex; flex-direction: column; gap: 0; }
+.visit-item {
+  display: flex; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--pale);
+  cursor: pointer;
+}
+.visit-item:last-child { border-bottom: none; }
+.visit-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--mint);
+  margin-top: 5px;
+  flex-shrink: 0;
+  position: relative;
+}
+.visit-dot::before {
+  content: '';
+  position: absolute;
+  left: 5px; top: 12px;
+  width: 2px; height: calc(100% + 14px);
+  background: var(--border);
+}
+.visit-item:last-child .visit-dot::before { display: none; }
+.visit-dot.pos  { background: var(--alert); }
+.visit-dot.pend { background: var(--warn); }
+
+.visit-body { flex: 1; }
+.visit-date { font-family: var(--mono); font-size: 12px; color: var(--mid); }
+.visit-result-line { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.visit-note { font-size: 13px; color: var(--mid); margin-top: 4px; }
+
+/* ═══════════════════════════ MAP PREVIEW */
+.map-preview {
+  width: 100%; height: 160px;
+  border-radius: var(--radius-sm);
+  background: #d0e8e0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--mid); font-size: 13px;
+  overflow: hidden;
+  position: relative;
+}
+.map-preview iframe { width: 100%; height: 100%; border: none; }
+
+/* ═══════════════════════════ SEARCH */
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  margin-bottom: 16px;
+}
+.search-bar input {
+  flex: 1; padding: 13px 0;
+  border: none; background: none;
+  font-family: var(--font); font-size: 15px;
+  color: var(--ink); outline: none;
+}
+.search-bar .search-icon { font-size: 18px; color: var(--ghost); }
+
+/* ═══════════════════════════ FILTER TABS */
+.filter-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.filter-tabs::-webkit-scrollbar { display: none; }
+.filter-tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--mid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.filter-tab.active { background: var(--forest); color: var(--white); border-color: var(--forest); }
+
+/* ═══════════════════════════ ADMIN SECTION */
+.admin-badge {
+  background: linear-gradient(90deg, #7c3aed, #a855f7);
+  color: white; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px;
+  letter-spacing: .05em;
+}
+
+.hpv-select { padding: 4px 12px; border-radius: 8px; border: 1.5px solid var(--border); font-family: var(--font); font-size: 14px; background: var(--cream); color: var(--ink); outline: none; }
+
+/* ═══════════════════════════ TOAST */
+.toast {
+  position: fixed;
+  bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  z-index: 999;
+  opacity: 0;
+  transition: all .3s;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { background: #1a7a5e; }
+.toast.error   { background: var(--alert); }
+
+/* ═══════════════════════════ MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+}
+.modal-backdrop.show { display: flex; }
+.modal-sheet {
+  background: var(--white);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  width: 100%;
+  max-height: 80dvh;
+  overflow-y: auto;
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+.modal-title { font-size: 18px; font-weight: 700; color: var(--forest); margin-bottom: 16px; }
+
+/* ═══════════════════════════ LOADING */
+.loading-spinner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px;
+  color: var(--ghost);
+  gap: 12px;
+}
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--mint);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════ EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--ghost);
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 15px; }
+.empty-state .empty-sub { font-size: 13px; margin-top: 6px; }
+
+/* ═══════════════════════════ SYNC INDICATOR */
+.sync-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  background: #fef6e4;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: #8a6000;
+}
+.sync-row.synced { background: #e1f5ec; color: #1a6040; }
+
+/* ═══════════════════════════ REPORT */
+.report-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+.report-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--pale); }
+.report-row:last-child { border-bottom: none; }
+.report-label { font-size: 14px; color: var(--mid); }
+.report-val { font-family: var(--mono); font-size: 16px; font-weight: 500; color: var(--forest); }
+
+/* Responsive */
+@media (min-width: 480px) {
+  .login-card { padding: 44px 36px; }
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN: LOGIN
+══════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="icon-wrap">🏥</div>
+      <h1>hpv-phosangkho</h1>
+
+      <p>รพ.สต.โพสังโฆ และเครือข่าย</p>
+    </div>
+    <div class="form-group">
+      <label>อีเมล</label>
+      <input type="email" id="login-email" placeholder="user@hpvsangkho.th" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>รหัสผ่าน</label>
+      <div style="position:relative">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" style="padding-right:48px">
+        <button type="button" id="toggle-pass"
+          onclick="(function(){
+            const i=document.getElementById('login-pass');
+            const b=document.getElementById('toggle-pass');
+            const eyeOpen=`<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>`;
+            const eyeOff=`<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>`;
+            if(i.type==='password'){i.type='text';b.innerHTML=eyeOff;}
+            else{i.type='password';b.innerHTML=eyeOpen;}
+          })()"
+          style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                 background:none;border:none;cursor:pointer;padding:4px;line-height:1;
+                 color:var(--ghost);display:flex;align-items:center;transition:color .2s"
+          onmouseover="this.style.color='var(--leaf)'" onmouseout="this.style.color='var(--ghost)'">
+          <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>
+        </button>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="login-btn">
+      <span id="login-label">เข้าสู่ระบบ</span>
+    </button>
+    <div class="err-msg" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: DASHBOARD
+══════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="topbar">
+    <h2 id="tb-site-name">hpv-phosangkho</h2>
+    <div class="offline-badge" id="offline-badge">OFFLINE</div>
+    <button class="topbar-action" id="sync-btn" title="ซิงค์ข้อมูล">🔄</button>
+    <button class="topbar-action" id="logout-btn">🚪</button>
+  </div>
+  <div class="main-content" id="main-dashboard">
+    <div class="greeting">
+      <h2 id="greet-text">สวัสดี</h2>
+      <p id="greet-date"></p>
+    </div>
+
+    <div id="sync-banner" class="sync-row" style="display:none">
+      <span>⏳</span>
+      <span id="sync-banner-text">มีข้อมูล offline รอซิงค์</span>
+    </div>
+
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">คนไข้ทั้งหมด</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-num" id="stat-pending">0</div>
+        <div class="stat-label">รอผล</div>
+      </div>
+      <div class="stat-card alert">
+        <div class="stat-num" id="stat-positive">0</div>
+        <div class="stat-label">ผล Positive</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-num" id="stat-today">0</div>
+        <div class="stat-label">ตรวจวันนี้</div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <span>🔴 ต้องติดตามด่วน</span>
+    </div>
+    <div class="patient-list" id="urgent-list">
+      <div class="empty-state">
+        <div class="empty-icon">✅</div>
+        <p>ไม่มีเคสด่วน</p>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">
+      <span>📋 ตรวจล่าสุด</span>
+      <button class="btn btn-ghost btn-sm" onclick="switchTab('patients')">ดูทั้งหมด →</button>
+    </div>
+    <div class="patient-list" id="recent-list">
+      <div class="loading-spinner"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </button>
+    <button class="nav-item" data-tab="patients" onclick="switchTab('patients')">
+      <span class="nav-icon">👩‍⚕️</span><span>คนไข้</span>
+    </button>
+    <button class="nav-item" data-tab="report" onclick="switchTab('report')">
+      <span class="nav-icon">📊</span><span>รายงาน</span>
+    </button>
+    <button class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+      <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+    </button>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-new" onclick="openNewPatient()">＋</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: PATIENTS LIST
+══════════════════════════════════════ -->
+<div id="screen-patients" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="switchTab('dashboard')">←</button>
+    <h2>คนไข้ทั้งหมด</h2>
+    <div class="offline-badge" id="offline-badge-2">OFFLINE</div>
+  </div>
+  <div class="main-content">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="search-input" placeholder="ค้นหาชื่อ หรือ เลขบัตร..." oninput="filterPatients()">
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">ทั้งหมด</button>
+      <button class="filter-tab" data-filter="pending" onclick="setFilter('pending',this)">รอผล</button>
+      <button class="filter-tab" data-filter="positive" onclick="setFilter('positive',this)">Positive</button>
+      <button class="filter-tab" data-filter="negative" onclick="setFilter('negative',this)">Negative</button>
+      <button class="filter-tab" data-filter="today" onclick="setFilter('today',this)">วันนี้</button>
+    </div>
+    <div class="patient-list" id="patients-list">
+      <div class="loading-spinner"><div class="spinner"></div><span>กำลังโหลด...</span></div>
+    </div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </button>
+    <button class="nav-item active" data-tab="patients" onclick="switchTab('patients')">
+      <span class="nav-icon">👩‍⚕️</span><span>คนไข้</span>
+    </button>
+    <button class="nav-item" data-tab="report" onclick="switchTab('report')">
+      <span class="nav-icon">📊</span><span>รายงาน</span>
+    </button>
+    <button class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+      <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+    </button>
+  </nav>
+  <button class="fab" onclick="openNewPatient()">＋</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: PATIENT DETAIL
+══════════════════════════════════════ -->
+<div id="screen-detail" class="screen">
+  <div class="topbar" style="background:var(--forest)">
+    <button class="topbar-back" onclick="goBack()">←</button>
+    <h2 id="detail-topbar-name">รายละเอียด</h2>
+    <button class="topbar-action" id="detail-edit-btn" onclick="editCurrentPatient()">✏️</button>
+  </div>
+  <div class="main-content" style="padding:0 0 80px">
+    <!-- Hero -->
+    <div class="detail-hero">
+      <div class="detail-avatar" id="detail-avatar">👩</div>
+      <div class="detail-hero-info">
+        <h3 id="detail-name">-</h3>
+        <p id="detail-id">-</p>
+        <p id="detail-age-addr">-</p>
+      </div>
+    </div>
+
+    <div style="padding:16px">
+      <!-- Basic Info -->
+      <div class="form-section">
+        <div class="form-section-title">📋 ข้อมูลทั่วไป</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-label">วันเกิด</div>
+            <div class="info-item-value" id="d-dob">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-label">อายุ</div>
+            <div class="info-item-value" id="d-age">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-label">เบอร์โทร</div>
+            <div class="info-item-value" id="d-tel">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-label">กลุ่มเสี่ยง</div>
+            <div class="info-item-value" id="d-risk">-</div>
+          </div>
+        </div>
+        <div class="info-item" style="border-bottom:none">
+          <div class="info-item-label">ที่อยู่</div>
+          <div class="info-item-value" id="d-addr">-</div>
+        </div>
+        <div id="d-map-wrap" style="margin-top:12px; display:none"></div>
+      </div>
+
+      <!-- Photos -->
+      <div class="form-section" id="d-photos-section" style="display:none">
+        <div class="form-section-title">📷 รูปภาพ</div>
+        <div class="photo-strip" id="d-photos"></div>
+      </div>
+
+      <!-- Visit History -->
+      <div class="form-section">
+        <div class="form-section-title">
+          🧪 ประวัติการตรวจ
+          <button class="btn btn-ghost btn-sm" onclick="openNewVisit()">+ บันทึกผล</button>
+        </div>
+        <div class="visit-timeline" id="visit-list">
+          <div class="empty-state" style="padding:24px 0">
+            <div class="empty-icon">🧫</div>
+            <p>ยังไม่มีประวัติการตรวจ</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-section">
+        <div class="form-section-title">📝 บันทึกเพิ่มเติม</div>
+        <div id="d-notes" style="color:var(--mid);font-size:14px">-</div>
+      </div>
+
+      <button class="btn btn-outline" onclick="exportPatientPDF()" style="margin-bottom:8px">
+        📄 Export ใบรายงานคนไข้
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: NEW / EDIT PATIENT FORM
+══════════════════════════════════════ -->
+<div id="screen-form" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goBack()">←</button>
+    <h2 id="form-title">ลงทะเบียนคนไข้ใหม่</h2>
+    <button class="topbar-action" id="form-save-topbar" onclick="savePatient()">💾</button>
+  </div>
+  <div class="main-content">
+
+    <!-- Personal -->
+    <div class="form-section">
+      <div class="form-section-title">👤 ข้อมูลส่วนตัว</div>
+      <div class="form-row">
+        <label>เลขบัตรประชาชน <span class="req">*</span></label>
+        <input type="tel" id="f-idcard" maxlength="13" placeholder="1234567890123" oninput="validateIDCard(this)" inputmode="numeric">
+        <div id="idcard-err" style="font-size:12px;color:var(--alert);margin-top:4px;display:none"></div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label>ชื่อ <span class="req">*</span></label>
+          <input type="text" id="f-fname" placeholder="สมหญิง">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label>นามสกุล <span class="req">*</span></label>
+          <input type="text" id="f-lname" placeholder="ใจดี">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:14px">
+        <label>วันเกิด <span class="req">*</span></label>
+        <input type="date" id="f-dob" onchange="calcAge()">
+        <div id="f-age-disp" style="font-size:13px;color:var(--mint);margin-top:4px"></div>
+      </div>
+      <div class="form-row">
+        <label>เบอร์โทรศัพท์</label>
+        <input type="tel" id="f-tel" placeholder="08x-xxx-xxxx" inputmode="tel">
+      </div>
+      <div class="form-row">
+        <label>กลุ่มเสี่ยง</label>
+        <select id="f-risk">
+          <option value="">-- เลือก --</option>
+          <option value="ทั่วไป">ทั่วไป</option>
+          <option value="มีประวัติครอบครัว">มีประวัติครอบครัว</option>
+          <option value="เคยตรวจพบ">เคยตรวจพบมาก่อน</option>
+          <option value="ภูมิคุ้มกันต่ำ">ภูมิคุ้มกันต่ำ</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Address + GPS -->
+    <div class="form-section">
+      <div class="form-section-title">📍 ที่อยู่ & พิกัด</div>
+      <div class="form-row">
+        <label>บ้านเลขที่ / หมู่</label>
+        <input type="text" id="f-addr-num" placeholder="เช่น 12/3 หมู่ 4">
+      </div>
+      <div class="form-row">
+        <label>ชื่อหมู่บ้าน / ซอย</label>
+        <input type="text" id="f-addr-village" placeholder="เช่น บ้านท่าขะยาย">
+      </div>
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label>ตำบล</label>
+          <input type="text" id="f-addr-sub" placeholder="โพสังโฆ">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label>อำเภอ</label>
+          <input type="text" id="f-addr-dist" placeholder="ค่ายบางระจัน">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:14px">
+        <label>พิกัด GPS บ้านคนไข้</label>
+        <div class="gps-btn-wrap">
+          <input type="text" id="f-gps" placeholder="กดปุ่มรับพิกัด" readonly>
+          <button class="btn btn-ghost btn-sm" onclick="getGPS()" id="gps-btn">📍 รับพิกัด</button>
+        </div>
+        <div class="gps-coords" id="gps-status">ยังไม่ได้รับพิกัด</div>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="form-section">
+      <div class="form-section-title">📷 รูปภาพ (ไม่เกิน 5 รูป)</div>
+      <div class="photo-strip" id="photo-strip">
+        <div class="photo-add" onclick="document.getElementById('photo-input').click()">📷</div>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" multiple capture="environment" onchange="addPhotos(this)">
+      <div style="font-size:12px;color:var(--ghost);margin-top:8px">รองรับ JPG, PNG — กดค้างที่รูปเพื่อลบ</div>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-section">
+      <div class="form-section-title">📝 บันทึกเพิ่มเติม</div>
+      <div class="form-row">
+        <textarea id="f-notes" placeholder="ข้อมูลเพิ่มเติม เช่น โรคประจำตัว ยาที่รับประทาน..."></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <button class="btn btn-ghost" onclick="goBack()" style="flex:1">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="savePatient()" style="flex:2" id="save-btn">
+        💾 บันทึกข้อมูล
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: REPORT
+══════════════════════════════════════ -->
+<div id="screen-report" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="switchTab('dashboard')">←</button>
+    <h2>รายงาน</h2>
+    <button class="topbar-action" onclick="exportCSV()">📥</button>
+  </div>
+  <div class="main-content">
+    <div class="form-section">
+      <div class="form-section-title">📅 เลือกช่วงเวลา</div>
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label>จาก</label>
+          <input type="date" id="rpt-from" onchange="loadReport()">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label>ถึง</label>
+          <input type="date" id="rpt-to" onchange="loadReport()">
+        </div>
+      </div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-row"><span class="report-label">จำนวนตรวจทั้งหมด</span><span class="report-val" id="r-total">0</span></div>
+      <div class="report-row"><span class="report-label">ผล Negative</span><span class="report-val" id="r-neg">0</span></div>
+      <div class="report-row"><span class="report-label">ผล Positive</span><span class="report-val" id="r-pos">0</span></div>
+      <div class="report-row"><span class="report-label">รอผล</span><span class="report-val" id="r-pend">0</span></div>
+      <div class="report-row"><span class="report-label">Positive Rate</span><span class="report-val" id="r-rate">0%</span></div>
+    </div>
+
+    <div class="section-title">รายชื่อในช่วงเวลา</div>
+    <div class="patient-list" id="report-list"></div>
+
+    <button class="btn btn-outline" onclick="exportCSV()" style="margin-top:12px">
+      📊 Export CSV
+    </button>
+    <button class="btn btn-ghost" onclick="printReport()" style="margin-top:8px">
+      🖨️ พิมพ์รายงาน
+    </button>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </button>
+    <button class="nav-item" data-tab="patients" onclick="switchTab('patients')">
+      <span class="nav-icon">👩‍⚕️</span><span>คนไข้</span>
+    </button>
+    <button class="nav-item active" data-tab="report" onclick="switchTab('report')">
+      <span class="nav-icon">📊</span><span>รายงาน</span>
+    </button>
+    <button class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+      <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN: SETTINGS
+══════════════════════════════════════ -->
+<div id="screen-settings" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="switchTab('dashboard')">←</button>
+    <h2>ตั้งค่า</h2>
+  </div>
+  <div class="main-content">
+    <div class="form-section">
+      <div class="form-section-title">👤 บัญชีผู้ใช้</div>
+      <div class="info-item">
+        <div class="info-item-label">อีเมล</div>
+        <div class="info-item-value" id="set-email">-</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-label">บทบาท</div>
+        <div class="info-item-value" id="set-role">-</div>
+      </div>
+      <div class="info-item">
+        <div class="info-item-label">รพ.สต.</div>
+        <div class="info-item-value" id="set-site">-</div>
+      </div>
+    </div>
+
+    <div class="form-section" id="admin-panel" style="display:none">
+      <div class="form-section-title">🛡️ Admin <span class="admin-badge">ADMIN</span></div>
+      <div class="form-row">
+        <label>ดูข้อมูลจาก รพ.สต.</label>
+        <select class="hpv-select" id="admin-site-filter" onchange="loadAllPatients()" style="width:100%;padding:12px 14px;">
+          <option value="all">ทุก รพ.สต.</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">📡 ข้อมูล Offline</div>
+      <div class="info-item">
+        <div class="info-item-label">รายการรอซิงค์</div>
+        <div class="info-item-value" id="set-offline-count">0 รายการ</div>
+      </div>
+      <button class="btn btn-ghost" onclick="forceSyncOffline()" style="margin-top:12px">
+        🔄 ซิงค์ข้อมูลตอนนี้
+      </button>
+    </div>
+
+    <button class="btn btn-danger" onclick="doLogout()" style="margin-top:8px">
+      🚪 ออกจากระบบ
+    </button>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </button>
+    <button class="nav-item" data-tab="patients" onclick="switchTab('patients')">
+      <span class="nav-icon">👩‍⚕️</span><span>คนไข้</span>
+    </button>
+    <button class="nav-item" data-tab="report" onclick="switchTab('report')">
+      <span class="nav-icon">📊</span><span>รายงาน</span>
+    </button>
+    <button class="nav-item active" data-tab="settings" onclick="switchTab('settings')">
+      <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: NEW VISIT / RESULT
+══════════════════════════════════════ -->
+<div class="modal-backdrop" id="visit-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🧪 บันทึกผลตรวจ HPV</div>
+    <div class="form-row">
+      <label>วันที่ตรวจ <span class="req">*</span></label>
+      <input type="date" id="v-date">
+    </div>
+    <div class="form-row">
+      <label>วิธีเก็บตัวอย่าง</label>
+      <select id="v-method">
+        <option value="Self-sampling">Self-sampling (เก็บเอง)</option>
+        <option value="Clinician">Clinician (บุคลากรเก็บ)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>ผลตรวจ <span class="req">*</span></label>
+      <div class="result-pills">
+        <div class="result-pill" data-val="negative" onclick="selectResult('negative',this)">⬤ Negative</div>
+        <div class="result-pill" data-val="positive" onclick="selectResult('positive',this)">⬤ Positive</div>
+        <div class="result-pill" data-val="pending"  onclick="selectResult('pending',this)">⬤ รอผล</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>ผู้ตรวจ</label>
+      <input type="text" id="v-examiner" placeholder="ชื่อเจ้าหน้าที่">
+    </div>
+    <div class="form-row">
+      <label>นัดครั้งต่อไป</label>
+      <input type="date" id="v-followup">
+    </div>
+    <div class="form-row">
+      <label>บันทึก</label>
+      <textarea id="v-note" placeholder="รายละเอียดเพิ่มเติม..." style="min-height:70px"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" onclick="closeVisitModal()" style="flex:1">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveVisit()" style="flex:2">💾 บันทึกผล</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     FIREBASE + APP LOGIC
+══════════════════════════════════════ -->
+<script type="module">
+// ═══════════════════════════════════════════
+// 🔧 FIREBASE CONFIG — แทนที่ด้วยค่าของคุณ
+// ═══════════════════════════════════════════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+  query, where, orderBy, onSnapshot, serverTimestamp, Timestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadString, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// ⚠️ แทนที่ด้วย Firebase config ของคุณ (ดูคู่มือ setup-firebase.html)
+const firebaseConfig = {
+  apiKey:            "AIzaSyDhiqO6QAC6FEQ4YC9ZyRyUpLD1ZUZvVZA",
+  authDomain:        "hpv-phosangkho.firebaseapp.com",
+  projectId:         "hpv-phosangkho",
+  storageBucket:     "hpv-phosangkho.firebasestorage.app",
+  messagingSenderId: "604103476726",
+  appId:             "1:604103476726:web:7efd71a59283ab2f81f3d7"
+};
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const storage = getStorage(app);
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentUser = null;
+let userProfile = null;
+let allPatients = [];
+let currentFilter = 'all';
+let currentPatient = null;
+let selectedResult = '';
+let photosData = []; // base64 array
+let editingId = null;
+let prevScreen = 'dashboard';
+let unsubPatients = null;
+
+// ═══════════════════════════════════════════
+// OFFLINE QUEUE (IndexedDB)
+// ═══════════════════════════════════════════
+const IDB_NAME = 'hpv_offline';
+const IDB_VER  = 1;
+let idb = null;
+
+function openIDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, IDB_VER);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('queue'))
+        d.createObjectStore('queue', { keyPath: 'id', autoIncrement: true });
+      if (!d.objectStoreNames.contains('patients'))
+        d.createObjectStore('patients', { keyPath: 'localId' });
+    };
+    req.onsuccess = e => { idb = e.target.result; res(idb); };
+    req.onerror   = () => rej(req.error);
+  });
+}
+
+async function queueOffline(action, data) {
+  if (!idb) return;
+  const tx = idb.transaction('queue', 'readwrite');
+  tx.objectStore('queue').add({ action, data, ts: Date.now() });
+  updateOfflineBadge();
+}
+
+async function getOfflineQueue() {
+  if (!idb) return [];
+  return new Promise(res => {
+    const tx  = idb.transaction('queue', 'readonly');
+    const req = tx.objectStore('queue').getAll();
+    req.onsuccess = () => res(req.result);
+  });
+}
+
+async function clearOfflineItem(id) {
+  if (!idb) return;
+  const tx = idb.transaction('queue', 'readwrite');
+  tx.objectStore('queue').delete(id);
+}
+
+async function updateOfflineBadge() {
+  const q = await getOfflineQueue();
+  const n = q.length;
+  document.getElementById('set-offline-count').textContent = `${n} รายการ`;
+  if (n > 0) {
+    document.getElementById('sync-banner').style.display = 'flex';
+    document.getElementById('sync-banner-text').textContent = `มีข้อมูล offline ${n} รายการรอซิงค์`;
+  } else {
+    document.getElementById('sync-banner').style.display = 'none';
+  }
+}
+
+window.forceSyncOffline = async function() {
+  if (!navigator.onLine) { showToast('ไม่มีการเชื่อมต่ออินเทอร์เน็ต', 'error'); return; }
+  const queue = await getOfflineQueue();
+  if (!queue.length) { showToast('ไม่มีข้อมูลรอซิงค์', 'success'); return; }
+  let ok = 0;
+  for (const item of queue) {
+    try {
+      if (item.action === 'addPatient') {
+        await addDoc(collection(db, 'patients'), item.data);
+      } else if (item.action === 'addVisit') {
+        await addDoc(collection(db, `patients/${item.data.patientId}/visits`), item.data.visit);
+      }
+      await clearOfflineItem(item.id);
+      ok++;
+    } catch(e) { console.warn('sync failed', e); }
+  }
+  showToast(`ซิงค์สำเร็จ ${ok}/${queue.length} รายการ`, 'success');
+  await updateOfflineBadge();
+  loadAllPatients();
+};
+
+// ═══════════════════════════════════════════
+// NETWORK STATUS
+// ═══════════════════════════════════════════
+function updateOnlineStatus() {
+  const offline = !navigator.onLine;
+  ['offline-badge','offline-badge-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('show', offline);
+  });
+}
+window.addEventListener('online',  () => { updateOnlineStatus(); forceSyncOffline(); });
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    await loadUserProfile();
+    showScreen('dashboard');
+    loadAllPatients();
+    initDashboard();
+  } else {
+    currentUser = null;
+    userProfile = null;
+    showScreen('login');
+  }
+});
+
+async function loadUserProfile() {
+  try {
+    const snap = await getDoc(doc(db, 'users', currentUser.uid));
+    if (snap.exists()) {
+      userProfile = snap.data();
+    } else {
+      // default profile
+      userProfile = { role: 'staff', site: 'phosangkho', siteName: 'รพ.สต.โพสังโฆ' };
+    }
+    // Update settings screen
+    document.getElementById('set-email').textContent = currentUser.email;
+    document.getElementById('set-role').textContent = userProfile.role === 'admin' ? 'ผู้ดูแลระบบ (Admin)' : 'เจ้าหน้าที่';
+    document.getElementById('set-site').textContent = userProfile.siteName || userProfile.site || '-';
+    document.getElementById('tb-site-name').textContent = userProfile.siteName || 'hpv-phosangkho';
+
+    if (userProfile.role === 'admin') {
+      document.getElementById('admin-panel').style.display = 'block';
+      loadSiteList();
+    }
+  } catch(e) {
+    console.warn('loadUserProfile', e);
+    userProfile = { role: 'staff', site: 'phosangkho', siteName: 'รพ.สต.โพสังโฆ' };
+  }
+}
+
+async function loadSiteList() {
+  try {
+    const snap = await getDocs(collection(db, 'sites'));
+    const sel  = document.getElementById('admin-site-filter');
+    snap.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.id; opt.textContent = d.data().name;
+      sel.appendChild(opt);
+    });
+  } catch(e) {}
+}
+
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-err');
+  const lbl   = document.getElementById('login-label');
+  if (!email || !pass) {
+    errEl.textContent = 'กรุณากรอกอีเมลและรหัสผ่าน'; errEl.classList.add('show'); return;
+  }
+  lbl.textContent = 'กำลังเข้าสู่ระบบ...';
+  document.getElementById('login-btn').disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    errEl.classList.remove('show');
+  } catch(e) {
+    let msg = 'เข้าสู่ระบบไม่สำเร็จ';
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') msg = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+    if (e.code === 'auth/user-not-found') msg = 'ไม่พบบัญชีผู้ใช้นี้';
+    if (e.code === 'auth/too-many-requests') msg = 'ลองใหม่อีกครั้งในภายหลัง';
+    errEl.textContent = msg; errEl.classList.add('show');
+  } finally {
+    lbl.textContent = 'เข้าสู่ระบบ';
+    document.getElementById('login-btn').disabled = false;
+  }
+});
+
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+document.getElementById('logout-btn').addEventListener('click', doLogout);
+window.doLogout = async function() {
+  if (!confirm('ออกจากระบบ?')) return;
+  if (unsubPatients) unsubPatients();
+  await signOut(auth);
+};
+
+// ═══════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name)?.classList.add('active');
+}
+
+window.switchTab = function(tab) {
+  prevScreen = tab;
+  showScreen(tab);
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.tab === tab);
+  });
+  if (tab === 'patients') renderPatientsList();
+  if (tab === 'report')   initReport();
+};
+
+window.goBack = function() {
+  if (prevScreen === 'form') prevScreen = 'patients';
+  showScreen(prevScreen || 'dashboard');
+  if (prevScreen === 'dashboard' || !prevScreen) initDashboard();
+};
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+function initDashboard() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('th-TH', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('greet-text').textContent = 'สวัสดี, ' + (userProfile?.displayName || currentUser?.email?.split('@')[0] || 'ผู้ใช้');
+  document.getElementById('greet-date').textContent = dateStr;
+  renderDashboardStats();
+  renderUrgentList();
+  renderRecentList();
+  updateOfflineBadge();
+}
+
+function renderDashboardStats() {
+  const total    = allPatients.length;
+  const pending  = allPatients.filter(p => latestResult(p) === 'pending').length;
+  const positive = allPatients.filter(p => latestResult(p) === 'positive').length;
+  const today    = allPatients.filter(p => {
+    if (!p.visits || !p.visits.length) return false;
+    const last = p.visits[p.visits.length-1];
+    return last.date === todayStr();
+  }).length;
+  document.getElementById('stat-total').textContent    = total;
+  document.getElementById('stat-pending').textContent  = pending;
+  document.getElementById('stat-positive').textContent = positive;
+  document.getElementById('stat-today').textContent    = today;
+}
+
+function renderUrgentList() {
+  const urgent = allPatients.filter(p => latestResult(p) === 'positive').slice(0,5);
+  const el = document.getElementById('urgent-list');
+  if (!urgent.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><p>ไม่มีเคสด่วน</p></div>'; return;
+  }
+  el.innerHTML = urgent.map(p => patientCardHTML(p, true)).join('');
+}
+
+function renderRecentList() {
+  const recent = [...allPatients]
+    .filter(p => p.visits && p.visits.length)
+    .sort((a,b) => {
+      const va = a.visits[a.visits.length-1]?.date || '';
+      const vb = b.visits[b.visits.length-1]?.date || '';
+      return vb.localeCompare(va);
+    }).slice(0,8);
+  const el = document.getElementById('recent-list');
+  if (!recent.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>ยังไม่มีข้อมูล</p><p class="empty-sub">กดปุ่ม + เพื่อเพิ่มคนไข้ใหม่</p></div>'; return;
+  }
+  el.innerHTML = recent.map(p => patientCardHTML(p)).join('');
+}
+
+// ═══════════════════════════════════════════
+// PATIENTS
+// ═══════════════════════════════════════════
+window.loadAllPatients = async function() {
+  if (!currentUser) return;
+  if (unsubPatients) unsubPatients();
+
+  const siteFilter = userProfile?.role === 'admin'
+    ? document.getElementById('admin-site-filter')?.value
+    : userProfile?.site;
+
+  let q;
+  if (siteFilter && siteFilter !== 'all') {
+    q = query(collection(db,'patients'), where('site','==', siteFilter), orderBy('createdAt','desc'));
+  } else if (userProfile?.role === 'admin') {
+    q = query(collection(db,'patients'), orderBy('createdAt','desc'));
+  } else {
+    q = query(collection(db,'patients'), where('site','==', userProfile?.site || 'phosangkho'), orderBy('createdAt','desc'));
+  }
+
+  unsubPatients = onSnapshot(q, async snapshot => {
+    const tmp = [];
+    for (const d of snapshot.docs) {
+      const pat = { id: d.id, ...d.data(), visits: [] };
+      // load visits sub-collection
+      try {
+        const vsSnap = await getDocs(query(collection(db,`patients/${d.id}/visits`), orderBy('date','asc')));
+        vsSnap.forEach(v => pat.visits.push({ id: v.id, ...v.data() }));
+      } catch(e) {}
+      tmp.push(pat);
+    }
+    allPatients = tmp;
+    renderDashboardStats();
+    renderUrgentList();
+    renderRecentList();
+    renderPatientsList();
+    loadReport();
+  }, err => {
+    console.warn('onSnapshot error', err);
+    showToast('ไม่สามารถโหลดข้อมูลได้', 'error');
+  });
+};
+
+function patientCardHTML(p, highlight=false) {
+  const res   = latestResult(p);
+  const badge = resBadge(res);
+  const last  = p.visits?.length ? p.visits[p.visits.length-1].date : '-';
+  const photo = p.photos?.[0] || null;
+  const avatarContent = photo
+    ? `<img src="${photo}" alt="">`
+    : (p.gender === 'ชาย' ? '👨' : '👩');
+  return `<div class="patient-card ${highlight?'highlight':''}" onclick="openPatient('${p.id}')">
+    <div class="avatar">${avatarContent}</div>
+    <div class="patient-info">
+      <div class="patient-name">${p.fname} ${p.lname}</div>
+      <div class="patient-sub">ตรวจล่าสุด: ${formatDate(last)} · ${p.site||''}</div>
+    </div>
+    ${badge}
+  </div>`;
+}
+
+function resBadge(res) {
+  if (res === 'positive') return '<span class="badge badge-positive">Positive</span>';
+  if (res === 'negative') return '<span class="badge badge-negative">Negative</span>';
+  if (res === 'pending')  return '<span class="badge badge-pending">รอผล</span>';
+  return '<span class="badge badge-new">ใหม่</span>';
+}
+
+function latestResult(p) {
+  if (!p.visits || !p.visits.length) return null;
+  return p.visits[p.visits.length-1].result;
+}
+
+window.filterPatients = function() {
+  renderPatientsList();
+};
+
+window.setFilter = function(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderPatientsList();
+};
+
+function renderPatientsList() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+  let list = allPatients;
+
+  if (currentFilter === 'pending')  list = list.filter(p => latestResult(p) === 'pending');
+  if (currentFilter === 'positive') list = list.filter(p => latestResult(p) === 'positive');
+  if (currentFilter === 'negative') list = list.filter(p => latestResult(p) === 'negative');
+  if (currentFilter === 'today')    list = list.filter(p => {
+    const last = p.visits?.[p.visits.length-1];
+    return last?.date === todayStr();
+  });
+  if (search) {
+    list = list.filter(p =>
+      (`${p.fname} ${p.lname}`).toLowerCase().includes(search) ||
+      (p.idcard||'').includes(search)
+    );
+  }
+
+  const el = document.getElementById('patients-list');
+  if (!el) return;
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>ไม่พบรายการ</p></div>'; return;
+  }
+  el.innerHTML = list.map(p => patientCardHTML(p)).join('');
+}
+
+// ═══════════════════════════════════════════
+// OPEN PATIENT DETAIL
+// ═══════════════════════════════════════════
+window.openPatient = function(id) {
+  currentPatient = allPatients.find(p => p.id === id);
+  if (!currentPatient) return;
+  const p = currentPatient;
+  prevScreen = document.querySelector('.screen.active')?.id.replace('screen-','') || 'patients';
+
+  document.getElementById('detail-topbar-name').textContent = `${p.fname} ${p.lname}`;
+  document.getElementById('detail-name').textContent = `${p.fname} ${p.lname}`;
+  document.getElementById('detail-id').textContent   = `เลขบัตร: ${p.idcard||'-'}`;
+  document.getElementById('detail-age-addr').textContent = `อายุ ${calcAgeFromDOB(p.dob)} ปี · ${p.site||''}`;
+  document.getElementById('d-dob').textContent  = formatDate(p.dob);
+  document.getElementById('d-age').textContent  = calcAgeFromDOB(p.dob) + ' ปี';
+  document.getElementById('d-tel').textContent  = p.tel || '-';
+  document.getElementById('d-risk').textContent = p.risk || 'ทั่วไป';
+  document.getElementById('d-notes').textContent = p.notes || '-';
+
+  const addrParts = [p.addrNum, p.addrVillage, 'ต.'+p.addrSub, 'อ.'+p.addrDist].filter(Boolean);
+  document.getElementById('d-addr').textContent = addrParts.join(' ') || '-';
+
+  // Avatar with photo
+  const ava = document.getElementById('detail-avatar');
+  if (p.photos?.[0]) ava.innerHTML = `<img src="${p.photos[0]}" alt="">`;
+  else ava.textContent = p.gender === 'ชาย' ? '👨' : '👩';
+
+  // Map
+  const mapWrap = document.getElementById('d-map-wrap');
+  if (p.lat && p.lng) {
+    mapWrap.style.display = 'block';
+    mapWrap.innerHTML = `<div class="map-preview">
+      <iframe src="https://maps.google.com/maps?q=${p.lat},${p.lng}&z=16&output=embed" loading="lazy"></iframe>
+    </div>
+    <div class="gps-coords got" style="margin-top:4px">📍 ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</div>`;
+  } else mapWrap.style.display = 'none';
+
+  // Photos
+  if (p.photos?.length) {
+    document.getElementById('d-photos-section').style.display = 'block';
+    document.getElementById('d-photos').innerHTML = p.photos.map(src =>
+      `<img class="photo-thumb" src="${src}" onclick="window.open('${src}','_blank')">`
+    ).join('');
+  } else document.getElementById('d-photos-section').style.display = 'none';
+
+  // Visits
+  renderVisitTimeline(p.visits || []);
+  showScreen('detail');
+};
+
+function renderVisitTimeline(visits) {
+  const el = document.getElementById('visit-list');
+  if (!visits.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:24px 0"><div class="empty-icon">🧫</div><p>ยังไม่มีประวัติการตรวจ</p></div>'; return;
+  }
+  el.innerHTML = [...visits].reverse().map(v => {
+    const dotClass = v.result === 'positive' ? 'pos' : v.result === 'pending' ? 'pend' : '';
+    return `<div class="visit-item">
+      <div class="visit-dot ${dotClass}"></div>
+      <div class="visit-body">
+        <div class="visit-date">${formatDate(v.date)}</div>
+        <div class="visit-result-line">
+          ${resBadge(v.result)}
+          <span style="font-size:13px;color:var(--mid)">${v.method||''}</span>
+        </div>
+        ${v.examiner ? `<div class="visit-note">ผู้ตรวจ: ${v.examiner}</div>` : ''}
+        ${v.followup ? `<div class="visit-note">นัดต่อไป: ${formatDate(v.followup)}</div>` : ''}
+        ${v.note ? `<div class="visit-note">${v.note}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// NEW / EDIT PATIENT
+// ═══════════════════════════════════════════
+window.openNewPatient = function() {
+  editingId = null;
+  photosData = [];
+  prevScreen = document.querySelector('.screen.active')?.id.replace('screen-','') || 'dashboard';
+  clearForm();
+  document.getElementById('form-title').textContent = 'ลงทะเบียนคนไข้ใหม่';
+  showScreen('form');
+};
+
+window.editCurrentPatient = function() {
+  if (!currentPatient) return;
+  const p = currentPatient;
+  editingId = p.id;
+  photosData = p.photos || [];
+  document.getElementById('form-title').textContent = 'แก้ไขข้อมูลคนไข้';
+  document.getElementById('f-idcard').value      = p.idcard || '';
+  document.getElementById('f-fname').value       = p.fname || '';
+  document.getElementById('f-lname').value       = p.lname || '';
+  document.getElementById('f-dob').value         = p.dob || '';
+  document.getElementById('f-tel').value         = p.tel || '';
+  document.getElementById('f-risk').value        = p.risk || '';
+  document.getElementById('f-addr-num').value    = p.addrNum || '';
+  document.getElementById('f-addr-village').value= p.addrVillage || '';
+  document.getElementById('f-addr-sub').value    = p.addrSub || '';
+  document.getElementById('f-addr-dist').value   = p.addrDist || '';
+  document.getElementById('f-notes').value       = p.notes || '';
+  if (p.lat && p.lng) {
+    document.getElementById('f-gps').value = `${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`;
+    document.getElementById('gps-status').textContent = `✅ รับพิกัดแล้ว: ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`;
+    document.getElementById('gps-status').classList.add('got');
+  }
+  calcAge();
+  renderPhotoStrip();
+  showScreen('form');
+};
+
+function clearForm() {
+  ['f-idcard','f-fname','f-lname','f-dob','f-tel','f-addr-num','f-addr-village','f-addr-sub','f-addr-dist','f-notes','f-gps'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-risk').value = '';
+  document.getElementById('f-age-disp').textContent = '';
+  document.getElementById('gps-status').textContent = 'ยังไม่ได้รับพิกัด';
+  document.getElementById('gps-status').classList.remove('got');
+  renderPhotoStrip();
+}
+
+window.savePatient = async function() {
+  const idcard  = document.getElementById('f-idcard').value.trim();
+  const fname   = document.getElementById('f-fname').value.trim();
+  const lname   = document.getElementById('f-lname').value.trim();
+  const dob     = document.getElementById('f-dob').value;
+
+  if (!fname || !lname || !dob) {
+    showToast('กรุณากรอกชื่อ นามสกุล และวันเกิด', 'error'); return;
+  }
+
+  const gpsRaw = document.getElementById('f-gps').value;
+  let lat = null, lng = null;
+  if (gpsRaw.includes(',')) {
+    const parts = gpsRaw.split(',');
+    lat = parseFloat(parts[0]); lng = parseFloat(parts[1]);
+  }
+
+  const data = {
+    idcard, fname, lname, dob,
+    tel:         document.getElementById('f-tel').value.trim(),
+    risk:        document.getElementById('f-risk').value,
+    addrNum:     document.getElementById('f-addr-num').value.trim(),
+    addrVillage: document.getElementById('f-addr-village').value.trim(),
+    addrSub:     document.getElementById('f-addr-sub').value.trim(),
+    addrDist:    document.getElementById('f-addr-dist').value.trim(),
+    notes:       document.getElementById('f-notes').value.trim(),
+    photos:      photosData,
+    lat, lng,
+    site:        userProfile?.site || 'phosangkho',
+    siteName:    userProfile?.siteName || '',
+    updatedBy:   currentUser.email,
+    updatedAt:   serverTimestamp(),
+  };
+
+  const btn = document.getElementById('save-btn');
+  btn.textContent = 'กำลังบันทึก...'; btn.disabled = true;
+
+  try {
+    if (navigator.onLine) {
+      if (editingId) {
+        await setDoc(doc(db, 'patients', editingId), data, { merge: true });
+        showToast('แก้ไขข้อมูลสำเร็จ', 'success');
+      } else {
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'patients'), data);
+        showToast('บันทึกคนไข้ใหม่สำเร็จ', 'success');
+      }
+    } else {
+      data.createdAt = new Date().toISOString();
+      await queueOffline('addPatient', data);
+      showToast('บันทึก Offline แล้ว จะซิงค์เมื่อมีเน็ต', 'success');
+    }
+    goBack();
+  } catch(e) {
+    showToast('บันทึกไม่สำเร็จ: ' + e.message, 'error');
+  } finally {
+    btn.textContent = '💾 บันทึกข้อมูล'; btn.disabled = false;
+  }
+};
+
+// ═══════════════════════════════════════════
+// VISIT MODAL
+// ═══════════════════════════════════════════
+window.openNewVisit = function() {
+  selectedResult = '';
+  document.getElementById('v-date').value = todayStr();
+  document.getElementById('v-method').value = 'Self-sampling';
+  document.getElementById('v-examiner').value = currentUser?.email?.split('@')[0] || '';
+  document.getElementById('v-followup').value = '';
+  document.getElementById('v-note').value = '';
+  document.querySelectorAll('.result-pill').forEach(p => p.className = 'result-pill');
+  document.getElementById('visit-modal').classList.add('show');
+};
+
+window.closeVisitModal = function() {
+  document.getElementById('visit-modal').classList.remove('show');
+};
+
+document.getElementById('visit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeVisitModal();
+});
+
+window.selectResult = function(val, el) {
+  selectedResult = val;
+  document.querySelectorAll('.result-pill').forEach(p => p.className = 'result-pill');
+  if (val === 'negative') el.classList.add('selected-neg');
+  if (val === 'positive') el.classList.add('selected-pos');
+  if (val === 'pending')  el.classList.add('selected-pend');
+};
+
+window.saveVisit = async function() {
+  if (!currentPatient) return;
+  const date = document.getElementById('v-date').value;
+  if (!date) { showToast('กรุณาเลือกวันที่ตรวจ', 'error'); return; }
+  if (!selectedResult) { showToast('กรุณาเลือกผลตรวจ', 'error'); return; }
+
+  const visit = {
+    date,
+    method:   document.getElementById('v-method').value,
+    result:   selectedResult,
+    examiner: document.getElementById('v-examiner').value.trim(),
+    followup: document.getElementById('v-followup').value,
+    note:     document.getElementById('v-note').value.trim(),
+    createdAt: serverTimestamp(),
+    createdBy: currentUser.email,
+  };
+
+  try {
+    if (navigator.onLine) {
+      await addDoc(collection(db, `patients/${currentPatient.id}/visits`), visit);
+    } else {
+      visit.createdAt = new Date().toISOString();
+      await queueOffline('addVisit', { patientId: currentPatient.id, visit });
+      currentPatient.visits.push(visit);
+      renderVisitTimeline(currentPatient.visits);
+    }
+    closeVisitModal();
+    showToast('บันทึกผลตรวจสำเร็จ', 'success');
+  } catch(e) {
+    showToast('บันทึกไม่สำเร็จ', 'error');
+  }
+};
+
+// ═══════════════════════════════════════════
+// GPS
+// ═══════════════════════════════════════════
+window.getGPS = function() {
+  const btn = document.getElementById('gps-btn');
+  const status = document.getElementById('gps-status');
+  if (!navigator.geolocation) { showToast('อุปกรณ์ไม่รองรับ GPS', 'error'); return; }
+  btn.textContent = '⏳ รอสัญญาณ...'; btn.disabled = true;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      document.getElementById('f-gps').value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      status.textContent = `✅ รับพิกัดแล้ว: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      status.classList.add('got');
+      btn.textContent = '📍 รับพิกัด'; btn.disabled = false;
+    },
+    err => {
+      status.textContent = '❌ ไม่สามารถรับพิกัดได้ กรุณาอนุญาต Location';
+      btn.textContent = '📍 รับพิกัด'; btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+};
+
+// ═══════════════════════════════════════════
+// PHOTOS
+// ═══════════════════════════════════════════
+window.addPhotos = function(input) {
+  const files = Array.from(input.files);
+  const remaining = 5 - photosData.length;
+  if (!remaining) { showToast('รูปครบ 5 รูปแล้ว', 'error'); return; }
+  const toLoad = files.slice(0, remaining);
+  toLoad.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      photosData.push(e.target.result);
+      renderPhotoStrip();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+};
+
+function renderPhotoStrip() {
+  const strip = document.getElementById('photo-strip');
+  const thumbs = photosData.map((src, i) =>
+    `<img class="photo-thumb" src="${src}" ontouchstart="startLongPress(${i})" onmousedown="startLongPress(${i})">`
+  ).join('');
+  const addBtn = photosData.length < 5
+    ? `<div class="photo-add" onclick="document.getElementById('photo-input').click()">📷</div>` : '';
+  strip.innerHTML = thumbs + addBtn;
+}
+
+let longPressTimer;
+window.startLongPress = function(idx) {
+  longPressTimer = setTimeout(() => {
+    if (confirm('ลบรูปนี้?')) { photosData.splice(idx,1); renderPhotoStrip(); }
+  }, 600);
+};
+document.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+document.addEventListener('touchend', () => clearTimeout(longPressTimer));
+
+// ═══════════════════════════════════════════
+// REPORT
+// ═══════════════════════════════════════════
+function initReport() {
+  const from = document.getElementById('rpt-from');
+  const to   = document.getElementById('rpt-to');
+  if (!from.value) {
+    const d = new Date(); d.setDate(1);
+    from.value = d.toISOString().slice(0,10);
+  }
+  if (!to.value) to.value = todayStr();
+  loadReport();
+}
+
+window.loadReport = function() {
+  const from = document.getElementById('rpt-from')?.value;
+  const to   = document.getElementById('rpt-to')?.value;
+  if (!from || !to) return;
+
+  const list = allPatients.filter(p => {
+    if (!p.visits?.length) return false;
+    return p.visits.some(v => v.date >= from && v.date <= to);
+  });
+
+  let total=0, neg=0, pos=0, pend=0;
+  list.forEach(p => {
+    p.visits?.forEach(v => {
+      if (v.date >= from && v.date <= to) {
+        total++;
+        if (v.result==='negative') neg++;
+        if (v.result==='positive') pos++;
+        if (v.result==='pending')  pend++;
+      }
+    });
+  });
+
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-neg').textContent   = neg;
+  document.getElementById('r-pos').textContent   = pos;
+  document.getElementById('r-pend').textContent  = pend;
+  document.getElementById('r-rate').textContent  = total ? `${((pos/total)*100).toFixed(1)}%` : '0%';
+
+  const el = document.getElementById('report-list');
+  if (!el) return;
+  if (!list.length) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>ไม่มีข้อมูลในช่วงนี้</p></div>'; return; }
+  el.innerHTML = list.map(p => patientCardHTML(p)).join('');
+};
+
+window.exportCSV = function() {
+  const from = document.getElementById('rpt-from')?.value || '';
+  const to   = document.getElementById('rpt-to')?.value || '';
+  const rows = [['ชื่อ','นามสกุล','เลขบัตร','วันตรวจ','วิธีเก็บ','ผล','ผู้ตรวจ','บันทึก','รพ.สต.']];
+  allPatients.forEach(p => {
+    (p.visits||[]).forEach(v => {
+      if (from && v.date < from) return;
+      if (to   && v.date > to)   return;
+      rows.push([p.fname, p.lname, p.idcard||'', v.date, v.method||'', v.result||'', v.examiner||'', v.note||'', p.siteName||p.site||'']);
+    });
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `HPV_Report_${from}_${to}.csv`;
+  a.click();
+  showToast('Export CSV สำเร็จ', 'success');
+};
+
+window.printReport = function() { window.print(); };
+
+// ═══════════════════════════════════════════
+// EXPORT PDF (print-based)
+// ═══════════════════════════════════════════
+window.exportPatientPDF = function() {
+  if (!currentPatient) return;
+  const p = currentPatient;
+  const wins = window.open('', '_blank');
+  const visits = (p.visits||[]).map(v =>
+    `<tr><td>${formatDate(v.date)}</td><td>${v.method||'-'}</td><td><b>${
+      v.result==='positive'?'✚ Positive':v.result==='negative'?'✔ Negative':'⏳ รอผล'
+    }</b></td><td>${v.examiner||'-'}</td><td>${v.note||'-'}</td></tr>`
+  ).join('');
+  wins.document.write(`<!DOCTYPE html><html lang="th"><head>
+    <meta charset="UTF-8"><title>ใบรายงาน HPV - ${p.fname} ${p.lname}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      body{font-family:'Sarabun',sans-serif;padding:30px;color:#1a2420;font-size:14px}
+      h1{color:#0a4a3a;border-bottom:2px solid #0a4a3a;padding-bottom:8px;margin-bottom:20px;font-size:20px}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+      .item label{font-size:11px;color:#666;font-weight:700;text-transform:uppercase}
+      .item p{font-size:14px;margin:2px 0 0;font-weight:600}
+      table{width:100%;border-collapse:collapse;margin-top:10px}
+      th{background:#0a4a3a;color:#fff;padding:8px 10px;font-size:12px;text-align:left}
+      td{padding:8px 10px;border-bottom:1px solid #e0ede8;font-size:13px}
+      @media print{body{padding:10mm}}
+    </style></head><body>
+    <h1>🏥 ใบรายงานการตรวจ HPV — รพ.สต.${p.siteName||p.site||''}</h1>
+    <div class="grid">
+      <div class="item"><label>ชื่อ-นามสกุล</label><p>${p.fname} ${p.lname}</p></div>
+      <div class="item"><label>เลขบัตรประชาชน</label><p>${p.idcard||'-'}</p></div>
+      <div class="item"><label>วันเกิด</label><p>${formatDate(p.dob)}</p></div>
+      <div class="item"><label>อายุ</label><p>${calcAgeFromDOB(p.dob)} ปี</p></div>
+      <div class="item"><label>เบอร์โทร</label><p>${p.tel||'-'}</p></div>
+      <div class="item"><label>กลุ่มเสี่ยง</label><p>${p.risk||'ทั่วไป'}</p></div>
+      <div class="item" style="grid-column:1/-1"><label>ที่อยู่</label><p>${[p.addrNum,p.addrVillage,'ต.'+p.addrSub,'อ.'+p.addrDist].filter(Boolean).join(' ')||'-'}</p></div>
+    </div>
+    <h2 style="font-size:15px;color:#0a4a3a">ประวัติการตรวจ HPV</h2>
+    <table><thead><tr><th>วันที่</th><th>วิธีเก็บ</th><th>ผล</th><th>ผู้ตรวจ</th><th>บันทึก</th></tr></thead>
+    <tbody>${visits||'<tr><td colspan=5 style="text-align:center">ยังไม่มีประวัติการตรวจ</td></tr>'}</tbody></table>
+    <p style="margin-top:30px;font-size:12px;color:#999">พิมพ์วันที่: ${new Date().toLocaleDateString('th-TH')} · ระบบ hpv-phosangkho รพ.สต.โพสังโฆ</p>
+    <script>window.onload=()=>window.print()<\/script></body></html>`);
+  wins.document.close();
+};
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function todayStr() { return new Date().toISOString().slice(0,10); }
+
+function formatDate(s) {
+  if (!s) return '-';
+  try {
+    const d = new Date(s);
+    return d.toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric' });
+  } catch{ return s; }
+}
+
+function calcAgeFromDOB(dob) {
+  if (!dob) return '-';
+  const diff = Date.now() - new Date(dob).getTime();
+  return Math.floor(diff / (1000*60*60*24*365.25));
+}
+
+window.calcAge = function() {
+  const dob = document.getElementById('f-dob').value;
+  const el  = document.getElementById('f-age-disp');
+  if (!dob) { el.textContent = ''; return; }
+  const age = calcAgeFromDOB(dob);
+  el.textContent = `อายุ ${age} ปี`;
+};
+
+window.validateIDCard = function(input) {
+  const val = input.value.replace(/\D/g,'');
+  input.value = val;
+  const err = document.getElementById('idcard-err');
+  if (val.length === 13) {
+    // Thai ID checksum
+    let sum = 0;
+    for (let i=0; i<12; i++) sum += parseInt(val[i]) * (13-i);
+    const check = (11 - (sum % 11)) % 10;
+    if (check === parseInt(val[12])) {
+      err.style.display = 'none';
+      input.style.borderColor = 'var(--mint)';
+    } else {
+      err.textContent = 'เลขบัตรไม่ถูกต้อง (checksum error)';
+      err.style.display = 'block';
+      input.style.borderColor = 'var(--alert)';
+    }
+  } else {
+    err.style.display = 'none';
+    input.style.borderColor = '';
+  }
+};
+
+// TOAST
+window.showToast = function(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => t.className = 'toast', 2800);
+};
+
+// Sync button
+document.getElementById('sync-btn').addEventListener('click', async () => {
+  document.getElementById('sync-btn').style.animation = 'spin .5s linear infinite';
+  await forceSyncOffline();
+  await loadAllPatients();
+  setTimeout(() => document.getElementById('sync-btn').style.animation = '', 1000);
+});
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+openIDB();
+</script>
+</body>
+</html>
