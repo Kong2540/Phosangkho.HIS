@@ -1321,12 +1321,12 @@ document.getElementById('login-pass').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('login-btn').click();
 });
 
-document.getElementById('logout-btn').addEventListener('click', doLogout);
 window.doLogout = async function() {
   if (!confirm('ออกจากระบบ?')) return;
   if (unsubPatients) unsubPatients();
   await signOut(auth);
 };
+document.getElementById('logout-btn').addEventListener('click', () => window.doLogout());
 
 // ═══════════════════════════════════════════
 // SCREENS
